@@ -5,12 +5,20 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     private const int HAND_SIZE = 2;
+    public const int MAX_HAND_SIZE = 7;
     public List<Card> hand = new List<Card>(HAND_SIZE);
-    public List<Card> evaluatedHand = new List<Card>(7);
-    public static int deal_counter = 0;
-    private Flop flop;
-    private Evaluator evaluator;
+    public List<Card> evaluatedHand = new List<Card>(MAX_HAND_SIZE);
+    public Card card_to_compare;
+    public string hand_result;
+    public string hand_result2;
     public HAND_EVALUATED hand_evaluated;
+
+    // May me needed when comparing Full Houses and Two Pair
+    public Card card_to_compare_two;
+
+    public static int deal_counter = 0;
+    public Flop flop;
+    private Evaluator evaluator;
     private void DealHand()
     {
         for(int i = 0; i < HAND_SIZE; ++i)
@@ -22,16 +30,28 @@ public class Hand : MonoBehaviour
 
     public enum HAND_EVALUATED
     {
-        ROYAL_FLUSH,
-        STRAIGHT_FLUSH,
-        QUADS,
-        FULL_HOUSE,
-        FLUSH,
-        STRAIGHT,
-        TRIPS,
-        TWO_PAIR,
+        HIGH_CARD,
         PAIR,
-        HIGH_CARD
+        TWO_PAIR,
+        THREE_OF_A_KIND,
+        FULL_HOUSE,
+        WHEEL_STRAIGHT,
+        STRAIGHT,
+        FLUSH,
+        FOUR_OF_A_KIND,
+        STRAIGHT_FLUSH,
+        ROYAL_FLUSH
+    }
+
+    //Helper methods to test
+    public void PrintHand()
+    {
+        Debug.Log("/////" + gameObject.name + "///////");
+        foreach(Card card in evaluatedHand)
+        {
+            Debug.Log(card.card_name);
+        }
+        Debug.Log("///////////////");
     }
 
     private void PositionHand()
@@ -71,9 +91,12 @@ public class Hand : MonoBehaviour
         PositionHand();
     }
 
-    public void EvaluateHandToString()
+    public void GetEvaluatedHand()
     {
-        evaluatedHand = hand;
+        foreach(Card card in hand)
+        {
+            evaluatedHand.Add(card);
+        }
         foreach(Card card in flop.flop)
         {
             evaluatedHand.Add(card);
