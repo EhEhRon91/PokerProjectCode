@@ -6,8 +6,11 @@ public class Hand : MonoBehaviour
 {
     private const int HAND_SIZE = 2;
     public List<Card> hand = new List<Card>(HAND_SIZE);
+    public List<Card> evaluatedHand = new List<Card>(7);
     public static int deal_counter = 0;
-
+    private Flop flop;
+    private Evaluator evaluator;
+    public HAND_EVALUATED hand_evaluated;
     private void DealHand()
     {
         for(int i = 0; i < HAND_SIZE; ++i)
@@ -15,6 +18,20 @@ public class Hand : MonoBehaviour
             hand.Add(Deck.deck[deal_counter]);
             deal_counter++;
         }
+    }
+
+    public enum HAND_EVALUATED
+    {
+        ROYAL_FLUSH,
+        STRAIGHT_FLUSH,
+        QUADS,
+        FULL_HOUSE,
+        FLUSH,
+        STRAIGHT,
+        TRIPS,
+        TWO_PAIR,
+        PAIR,
+        HIGH_CARD
     }
 
     private void PositionHand()
@@ -52,5 +69,14 @@ public class Hand : MonoBehaviour
     {
         DealHand();
         PositionHand();
+    }
+
+    public void EvaluateHandToString()
+    {
+        evaluatedHand = hand;
+        foreach(Card card in flop.flop)
+        {
+            evaluatedHand.Add(card);
+        }
     }
 }

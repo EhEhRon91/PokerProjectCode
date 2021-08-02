@@ -7,6 +7,7 @@ public class Flop : MonoBehaviour
     private const int START_AMOUNT_DEALT = 3;
     private const int END_AMOUNT_DEALT = 5;
     public List<Card> flop = new List<Card>(END_AMOUNT_DEALT);
+
     private void DealInitial()
     {
         for(int i = 0; i < START_AMOUNT_DEALT; ++i)
