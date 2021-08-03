@@ -9,9 +9,8 @@ public class Hand : MonoBehaviour
     public List<Card> hand = new List<Card>(HAND_SIZE);
     public List<Card> evaluatedHand = new List<Card>(MAX_HAND_SIZE);
     public Card card_to_compare;
-    public string hand_result;
-    public string hand_result2;
-    public HAND_EVALUATED hand_evaluated;
+    public string hand_result = "Not set";
+    public HAND_EVALUATED hand_evaluated = HAND_EVALUATED.HIGH_CARD;
 
     // May me needed when comparing Full Houses and Two Pair
     public Card card_to_compare_two;
@@ -93,11 +92,11 @@ public class Hand : MonoBehaviour
 
     public void GetEvaluatedHand()
     {
-        foreach(Card card in hand)
+        foreach (Card card in hand)
         {
             evaluatedHand.Add(card);
         }
-        foreach(Card card in flop.flop)
+        foreach (Card card in flop.flop)
         {
             evaluatedHand.Add(card);
         }

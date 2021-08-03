@@ -21,6 +21,10 @@ public class Evaluator : MonoBehaviour
         compareTwoHands(playerHand, enemy1Hand);
         playerHand.PrintHand();
         enemy1Hand.PrintHand();
+        playerHand.hand_evaluated = HandType(playerHand);
+        enemy1Hand.hand_evaluated = HandType(enemy1Hand);
+        playerHand.hand_result = HandString(playerHand);
+        enemy1Hand.hand_result = HandString(enemy1Hand);
     }
 
     public static List<Card> sortHandByValue(List<Card> hand)
@@ -38,10 +42,96 @@ public class Evaluator : MonoBehaviour
         return (int)card.card_value;
     }
 
-    public string checkHighCard(Hand hand)
+    public string HandString(Hand hand)
     {
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.ROYAL_FLUSH)
+        {
+            return "ROYAL FLUSH OF " + hand.evaluatedHand[3].suit.ToString() + "'s";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.STRAIGHT_FLUSH)
+        {
+            return "STRAIGHT FLUSH OF " + hand.evaluatedHand[4].suit.ToString() + "'s WITH A HIGH CARD OF " + hand.card_to_compare.card_value.ToString();
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.FOUR_OF_A_KIND)
+        {
+            return "FOUR OF A KIND WITH " + hand.card_to_compare.card_value.ToString() + "'s";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.FLUSH)
+        {
+            return "FLUSH OF " + hand.card_to_compare.suit.ToString() + "'s WITH HIGH CARD OF " + hand.card_to_compare.card_value.ToString();
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.STRAIGHT)
+        {
+            return "STRAIGHT WITH A HIGH CARD OF " + hand.card_to_compare.card_value.ToString();
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.WHEEL_STRAIGHT)
+        {
+            return "STRAIGHT WITH A HIGH OF FIVE";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.FULL_HOUSE)
+        {
+            return "FULL HOUSE, " + hand.card_to_compare.card_value.ToString() + "'s FULL OF " + hand.card_to_compare_two.card_value.ToString() + "'s";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.THREE_OF_A_KIND)
+        {
+            return "THREE OF A KIND WITH " + hand.card_to_compare.card_value.ToString() + "'s";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.TWO_PAIR)
+        {
+            return "TWO PAIR WITH " + hand.card_to_compare.card_value.ToString() + "'s and " + hand.card_to_compare_two.card_value.ToString() + "'s";
+        }
+        if(hand.hand_evaluated == Hand.HAND_EVALUATED.PAIR)
+        {
+            return "PAIR WITH " + hand.card_to_compare.card_value.ToString() + "'s";
+        }
+
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
-        return "HIGH CARD WITH " + hand.evaluatedHand[hand.evaluatedHand.Count - 1].card_name.ToString();
+        return "HIGH CARD OF " + hand.evaluatedHand[hand.evaluatedHand.Count - 1].card_value.ToString();
+    }
+
+    public Hand.HAND_EVALUATED HandType(Hand hand)
+    {
+        if(isRoyalFlush(hand))
+        {
+            return Hand.HAND_EVALUATED.ROYAL_FLUSH;
+        }
+        if (isStraightFlush(hand))
+        {
+            return Hand.HAND_EVALUATED.STRAIGHT_FLUSH;
+        }
+        if (isFourOfAKind(hand))
+        {
+            return Hand.HAND_EVALUATED.FOUR_OF_A_KIND;
+        }
+        if (isFlush(hand))
+        {
+            return Hand.HAND_EVALUATED.FLUSH;
+        }
+        if (isStraight(hand))
+        {
+            return Hand.HAND_EVALUATED.STRAIGHT;
+        }
+        if (isWheelStraight(hand))
+        {
+            return Hand.HAND_EVALUATED.WHEEL_STRAIGHT;
+        }
+        if (isFullHouse(hand))
+        {
+            return Hand.HAND_EVALUATED.FULL_HOUSE;
+        }
+        if (isThreeOfAKind(hand))
+        {
+            return Hand.HAND_EVALUATED.THREE_OF_A_KIND;
+        }
+        if (isTwoPair(hand))
+        {
+            return Hand.HAND_EVALUATED.TWO_PAIR;
+        }
+        if (isPair(hand))
+        {
+            return Hand.HAND_EVALUATED.PAIR;
+        }
+        return Hand.HAND_EVALUATED.HIGH_CARD;
     }
 
     public bool isRoyalFlush(Hand hand)
@@ -49,7 +139,6 @@ public class Evaluator : MonoBehaviour
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
         if (isStraight(hand) && isFlush(hand) && getCardVal(hand.evaluatedHand[hand.evaluatedHand.Count - 1]) == 12)
         {
-            hand.hand_result = "ROYAL FLUSH OF " + hand.evaluatedHand[3].suit.ToString() + "'s";
             return true;
         }
         return false;
@@ -58,9 +147,8 @@ public class Evaluator : MonoBehaviour
     public bool isStraightFlush(Hand hand)
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
-        if (isFlush(hand) && isStraight(hand))
+        if (isFlush(hand) && isStraight(hand) || isFlush(hand) && isWheelStraight(hand))
         {
-            hand.hand_result = "STRAIGHT FLUSH OF " + hand.evaluatedHand[4].suit.ToString() + "'s WITH A HIGH CARD OF " + hand.card_to_compare.card_value.ToString();
             return true;
         }
         return false;
@@ -78,7 +166,6 @@ public class Evaluator : MonoBehaviour
                 counter++;
                 if (counter == HAND_LIMIT)
                 {
-                    hand.hand_result = "FLUSH OF " + hand.evaluatedHand[i].suit.ToString() + "'s";
                     suit_to_check = hand.evaluatedHand[i].suit;
                     break;
                 }
@@ -93,47 +180,35 @@ public class Evaluator : MonoBehaviour
                 hand.card_to_compare = hand.evaluatedHand[i];
             }
         }
-        return counter == HAND_LIMIT;
+        return counter >= 4;
     }
 
     public bool isStraight(Hand hand)
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
-
-        for (int i = 0; i < (hand.evaluatedHand.Count - 4); ++i)
+        bool isStraight = false;
+        if(getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[1]) - 1 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[2]) - 2
+            && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[3]) - 3 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[4]) - 4)
         {
-            if(getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]) - 1 && getCardVal(hand.evaluatedHand[i + 0]) == getCardVal(hand.evaluatedHand[2 + i]) - 2
-                && getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[3 + i]) - 3 && getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[4 + i]) -4)
-            {
-               /* if(i == 0)
-                {
-                    if(getCardVal(hand.evaluatedHand[4]) == getCardVal(hand.evaluatedHand[5]) - 1 && getCardVal(hand.evaluatedHand[4]) == getCardVal(hand.evaluatedHand[6]) - 2)
-                    {
-                        hand.card_to_compare = hand.evaluatedHand[6];
-                        hand.hand_result = "STRAIGHT WITH HIGH CARD " + hand.card_to_compare.card_value.ToString();
-                        return true;
-                    }
-                    if (getCardVal(hand.evaluatedHand[4]) == getCardVal(hand.evaluatedHand[5]) - 1)
-                    {
-                        hand.card_to_compare = hand.evaluatedHand[5];
-                        hand.hand_result = "STRAIGHT WITH HIGH CARD " + hand.card_to_compare.card_value.ToString();
-                        return true;
-                    }
-                }
-                if(i == 1)
-                {
-                    if (getCardVal(hand.evaluatedHand[5]) == getCardVal(hand.evaluatedHand[6]) - 1)
-                    {
-                        hand.card_to_compare = hand.evaluatedHand[5];
-                        hand.hand_result = "STRAIGHT WITH HIGH CARD " + hand.card_to_compare.card_value.ToString();
-                        return true;
-                    }
-                }
-                hand.hand_result = "STRAIGHT WITH HIGH CARD " + hand.evaluatedHand[i + 4].card_value.ToString();*/
-                return true;
-            }
+            isStraight = true;
+            hand.card_to_compare = hand.evaluatedHand[4];
         }
-        return false;
+        if (getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[2]) - 1 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[3]) - 2
+           && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[4]) - 3 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[5]) - 4
+           && hand.evaluatedHand.Count == 6)
+        {
+            isStraight = true;
+            hand.card_to_compare = hand.evaluatedHand[5];
+        }
+        if (getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[3]) - 1 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[4]) - 2
+           && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[5]) - 3 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[6]) - 4
+           && hand.evaluatedHand.Count == 7)
+        {
+            isStraight = true;
+            hand.card_to_compare = hand.evaluatedHand[6];
+        }
+
+        return isStraight;
     }
 
     public bool isWheelStraight(Hand hand)
@@ -147,7 +222,6 @@ public class Evaluator : MonoBehaviour
         if(card_values.Contains(Card.CARD_VALUE.ACE) && card_values.Contains(Card.CARD_VALUE.TWO) && card_values.Contains(Card.CARD_VALUE.THREE)
            && card_values.Contains(Card.CARD_VALUE.FOUR) && card_values.Contains(Card.CARD_VALUE.FIVE))
         {
-            hand.hand_result = "STRAIGHT WITH A HIGH OF FIVE";
             return true;
         }
         return false;
@@ -161,7 +235,6 @@ public class Evaluator : MonoBehaviour
         {
             if (getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]) && getCardVal(hand.evaluatedHand[1 + i]) == getCardVal(hand.evaluatedHand[2 + i]) && getCardVal(hand.evaluatedHand[2 + i]) == getCardVal(hand.evaluatedHand[3 + i]))
             {
-                hand.hand_result = "FOUR OF A KIND WITH " + hand.evaluatedHand[0 + i].card_value.ToString() + "'s";
                 hand.card_to_compare = hand.evaluatedHand[0 + i];
                 return true;
             }
@@ -177,14 +250,12 @@ public class Evaluator : MonoBehaviour
         {
             if(getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[i + 1]) && getCardVal(hand.evaluatedHand[i + 2]) == getCardVal(hand.evaluatedHand[i + 3]) && getCardVal(hand.evaluatedHand[i + 3]) == getCardVal(hand.evaluatedHand[i + 4]))
             {
-                hand.hand_result = "FULL HOUSE, " + hand.evaluatedHand[i + 2].card_name.ToString() + " FULL OF " + hand.evaluatedHand[i + 0].ToString() + "'s";
                 hand.card_to_compare = hand.evaluatedHand[0 + i];
                 hand.card_to_compare_two = hand.evaluatedHand[i + 2];
                 return true;
             }
             if (getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[i + 1]) && getCardVal(hand.evaluatedHand[i + 0]) == getCardVal(hand.evaluatedHand[i + 2]) && getCardVal(hand.evaluatedHand[i + 3]) == getCardVal(hand.evaluatedHand[i + 4]))
             {
-                hand.hand_result = "FULL HOUSE, " + hand.evaluatedHand[i + 0].card_name.ToString() + " FULL OF " + hand.evaluatedHand[i + 3].ToString() + "'s";
                 hand.card_to_compare = hand.evaluatedHand[2 + i];
                 hand.card_to_compare_two = hand.evaluatedHand[i + 0];
                 return true;
@@ -201,7 +272,6 @@ public class Evaluator : MonoBehaviour
         {
             if (getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]) && getCardVal(hand.evaluatedHand[1 + i]) == getCardVal(hand.evaluatedHand[2 + i]))
             {
-                hand.hand_result = "THREE OF A KIND WITH " + hand.evaluatedHand[0 + i].card_value.ToString() + "'s";
                 hand.card_to_compare = hand.evaluatedHand[0 + i];
                 return true;
             }
@@ -212,29 +282,33 @@ public class Evaluator : MonoBehaviour
     public bool isTwoPair(Hand hand)
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
-        bool isTwoPair = false;
-        for(int i = 0; i < (hand.evaluatedHand.Count - 3); ++i)
+        int pairCounter = 0;
+        for(int i = 0; i < (hand.evaluatedHand.Count - 1); ++i)
         {
-            if(getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]) && getCardVal(hand.evaluatedHand[2 + i]) == getCardVal(hand.evaluatedHand[3 + i]))
+            if(getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]))
             {
-                hand.hand_result = "TWO PAIR WITH " + hand.evaluatedHand[0 + i].card_value + "'s and " + hand.evaluatedHand[2 + i].card_value + "'s";
-                hand.card_to_compare = hand.evaluatedHand[0 + i];
-                hand.card_to_compare_two = hand.evaluatedHand[2 + i];
-                isTwoPair = true;
+                if(pairCounter == 0)
+                {
+                    hand.card_to_compare = hand.evaluatedHand[0 + i];
+                }
+                if(pairCounter == 1)
+                {
+                    hand.card_to_compare_two = hand.evaluatedHand[0 + i];
+                }
+                pairCounter++;
             }
         }
-        return isTwoPair;
+        return pairCounter == 2;
     }
 
     public bool isPair(Hand hand)
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
         bool isPair = false;
-        for(int i = 0; i < (hand.evaluatedHand.Count - 1); ++i)
+        for(int i = 0; i < hand.evaluatedHand.Count - 1; ++i)
         {
             if(getCardVal(hand.evaluatedHand[0 + i]) == getCardVal(hand.evaluatedHand[1 + i]))
             {
-                hand.hand_result = "PAIR WITH " + hand.evaluatedHand[0 + i].card_value + "'s";
                 hand.card_to_compare = hand.evaluatedHand[0 + i];
                 isPair = true;
             }
@@ -352,8 +426,6 @@ public class Evaluator : MonoBehaviour
        {
             return CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
        }
-       hand1.hand_result = checkHighCard(hand1);
-       hand2.hand_result = checkHighCard(hand2);
        return CompareCardValues(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1], hand2.evaluatedHand[hand1.evaluatedHand.Count - 1]);
     }
 }
