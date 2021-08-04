@@ -65,19 +65,19 @@ public class Hand : MonoBehaviour
 
     private Vector3 setCardPos(string gameObjectName, int cardNum)
     {
-        if(gameObjectName == "PlayerHand")
+        if(gameObjectName == "Player")
         {
             return new Vector3(-50.0f + 100.0f * cardNum, -190.0f, 1.0f);
         }
-        else if(gameObjectName == "Enemy1Hand")
+        else if(gameObjectName == "Enemy1")
         {
             return new Vector3(-650.0f, -75.0f + 150.0f * cardNum, 1.0f);
         }
-        else if(gameObjectName == "Enemy2Hand")
+        else if(gameObjectName == "Enemy2")
         {
             return new Vector3(-50.0f  + 100.0f * cardNum, 500.0f, 1.0f);
         }
-        else if(gameObjectName == "Enemy3Hand")
+        else if(gameObjectName == "Enemy3")
         {
             return new Vector3(650.0f, -75.0f + 150.0f * cardNum, 1.0f);
         }
