@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Pot : MonoBehaviour
 {
-    public Chips pot;
-    public Player user;
+    public Player player;
     public Player enemy1;
     public Player enemy2;
     public Player enemy3;
 
-    public int SMALL_BLIND = 100;
-    public int BIG_BLIND = 200;
+    public int amount = 0;
+
+    public static int SMALL_BLIND = 100;
+    public static int BIG_BLIND = 200;
 
     public void setBlinds(int blind_counter)
     {
@@ -22,11 +23,17 @@ public class Pot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pot = new Chips(0);
+        amount = 0;
     }
 
-    public void AddToPot(int amount, Player player)
+    public void AddToPotPlayer(int amount_added)
     {
-        pot.amount = player.Bet(amount);
+        amount += amount_added;
+        player.chips -= amount_added;
+    }
+
+    public void ResetPot()
+    {
+        amount = 0;
     }
 }

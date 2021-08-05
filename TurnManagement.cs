@@ -14,11 +14,40 @@ public class TurnManagement : MonoBehaviour
 
     public static int turn_counter = 0;
 
-    private const float TURN_LENGTH = 1.0f;
-    private const float turn_timer = 0.0f;
+    public const float TURN_LENGTH = 1.0f;
+    public float turn_timer = 0.0f;
     private void Start()
     {
         Turn(user);
+    }
+
+    public void Fold(Player player)
+    {
+        player.hasFolded = true;
+        player.isMyTurn = false;
+    }
+
+    public void PlayerBet()
+    {
+        user.isMyTurn = false;
+    }
+
+    public void AddToBet()
+    {
+        if(user.chips <= 0)
+        {
+            return;
+        }
+        pot.AddToPotPlayer(Pot.SMALL_BLIND);
+    }
+
+    public void RemoveFromBet()
+    {
+        if(pot.amount <= 0)
+        {
+            return;
+        }
+        pot.AddToPotPlayer(-Pot.SMALL_BLIND);
     }
 
     public void Turn(Player player)

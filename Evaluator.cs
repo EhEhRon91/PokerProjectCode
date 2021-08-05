@@ -19,8 +19,6 @@ public class Evaluator : MonoBehaviour
         playerHand.GetEvaluatedHand();
         enemy1Hand.GetEvaluatedHand();
         compareTwoHands(playerHand, enemy1Hand);
-        playerHand.PrintHand();
-        enemy1Hand.PrintHand();
         playerHand.hand_evaluated = HandType(playerHand);
         enemy1Hand.hand_evaluated = HandType(enemy1Hand);
         playerHand.hand_result = HandString(playerHand);
@@ -193,21 +191,24 @@ public class Evaluator : MonoBehaviour
             isStraight = true;
             hand.card_to_compare = hand.evaluatedHand[4];
         }
-        if (getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[2]) - 1 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[3]) - 2
-           && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[4]) - 3 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[5]) - 4
-           && hand.evaluatedHand.Count == 6)
+        if (hand.evaluatedHand.Count == 6)
         {
-            isStraight = true;
-            hand.card_to_compare = hand.evaluatedHand[5];
+            if (getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[2]) - 1 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[3]) - 2
+               && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[4]) - 3 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[5]) - 4)
+            {
+                isStraight = true;
+                hand.card_to_compare = hand.evaluatedHand[5];
+            }
         }
-        if (getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[3]) - 1 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[4]) - 2
-           && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[5]) - 3 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[6]) - 4
-           && hand.evaluatedHand.Count == 7)
+        if (hand.evaluatedHand.Count == 7)
         {
-            isStraight = true;
-            hand.card_to_compare = hand.evaluatedHand[6];
+            if (getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[3]) - 1 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[4]) - 2
+               && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[5]) - 3 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[6]) - 4)
+            {
+                isStraight = true;
+                hand.card_to_compare = hand.evaluatedHand[6];
+            }
         }
-
         return isStraight;
     }
 
