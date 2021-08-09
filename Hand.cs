@@ -101,4 +101,16 @@ public class Hand : MonoBehaviour
             evaluatedHand.Add(card);
         }
     }
+
+    public void AddToHandFromFlop()
+    {
+        if(TurnManagement.turn_counter == 0)
+        {
+            evaluatedHand.Add(flop.flop[3]);
+        }
+        else if(TurnManagement.turn_counter == 1)
+        {
+            evaluatedHand.Add(flop.flop[4]);
+        }
+    }
 }

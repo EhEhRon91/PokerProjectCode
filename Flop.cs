@@ -38,7 +38,7 @@ public class Flop : MonoBehaviour
         return new Vector3(-250.0f + 125.0f * cardNum, 0.0f, 1.0f);
     }
 
-    private void DealAnotherCard()
+    public void DealAnotherCard()
     {
         flop.Add(Deck.deck[Hand.deal_counter]);
         Hand.deal_counter++;

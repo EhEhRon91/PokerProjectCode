@@ -9,7 +9,10 @@ public class Pot : MonoBehaviour
     public Player enemy2;
     public Player enemy3;
 
+    public int turn_amount = 0;
     public int amount = 0;
+
+    public int min_amount_to_bet = SMALL_BLIND;
 
     public static int SMALL_BLIND = 100;
     public static int BIG_BLIND = 200;
@@ -24,11 +27,17 @@ public class Pot : MonoBehaviour
     void Start()
     {
         amount = 0;
+        turn_amount = SMALL_BLIND;
+    }
+
+    public void SetBaseAmount()
+    {
+        min_amount_to_bet = SMALL_BLIND;
     }
 
     public void AddToPotPlayer(int amount_added)
     {
-        amount += amount_added;
+        turn_amount += amount_added;
         player.chips -= amount_added;
     }
 

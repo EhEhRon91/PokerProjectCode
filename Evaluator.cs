@@ -18,11 +18,8 @@ public class Evaluator : MonoBehaviour
         yield return new WaitForEndOfFrame();
         playerHand.GetEvaluatedHand();
         enemy1Hand.GetEvaluatedHand();
-        compareTwoHands(playerHand, enemy1Hand);
-        playerHand.hand_evaluated = HandType(playerHand);
-        enemy1Hand.hand_evaluated = HandType(enemy1Hand);
-        playerHand.hand_result = HandString(playerHand);
-        enemy1Hand.hand_result = HandString(enemy1Hand);
+        enemy2Hand.GetEvaluatedHand();
+        enemy3Hand.GetEvaluatedHand();
     }
 
     public static List<Card> sortHandByValue(List<Card> hand)
