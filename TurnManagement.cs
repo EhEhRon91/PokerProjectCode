@@ -62,6 +62,7 @@ public class TurnManagement : MonoBehaviour
     {
         player.isMyTurn = false;
         player.doneTurn = true;
+        turn_counter++;
     }
     public void PlayerBet()
     {

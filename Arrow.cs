@@ -306,22 +306,25 @@ public class Arrow : MonoBehaviour
 
             if(player.hasWon == true)
             {
+                playerHand.hand_evaluated = evaluator.HandType(playerHand);
                 WinningText.text += "Player 1 has Won with " + evaluator.HandString(playerHand);
             }
             if(enemy1.hasWon == true)
             {
+                enemy1Hand.hand_evaluated = evaluator.HandType(enemy1Hand);
                 WinningText.text += "Player 2 has Won with " + evaluator.HandString(enemy1Hand);
             }
             if(enemy2.hasWon == true)
             {
+                enemy2Hand.hand_evaluated = evaluator.HandType(enemy2Hand);
                 WinningText.text += "Player 3 has Won with " + evaluator.HandString(enemy2Hand);
             }
             if(enemy3.hasWon == true)
             {
+                enemy3Hand.hand_evaluated = evaluator.HandType(enemy3Hand);
                 WinningText.text += "Player 4 has Won with " + evaluator.HandString(enemy3Hand);
             }
 
-            TurnManagement.card_counter++;
             turnManager.ResetTurn(player);
             turnManager.ResetTurn(enemy1);
             turnManager.ResetTurn(enemy2);
@@ -331,6 +334,12 @@ public class Arrow : MonoBehaviour
             enemy1Hand.AddToHandFromFlop();
             enemy2Hand.AddToHandFromFlop();
             enemy3Hand.AddToHandFromFlop();
+
+            //Testing purposes
+            playerHand.PrintHand();
+            enemy1Hand.PrintHand();
+            enemy2Hand.PrintHand();
+            enemy3Hand.PrintHand();
         }
     }
 }

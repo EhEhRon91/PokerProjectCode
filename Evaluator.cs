@@ -142,6 +142,9 @@ public class Evaluator : MonoBehaviour
     public bool isStraightFlush(Hand hand)
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
+
+        //TODO:
+        //Rework checking flush because currently, you can have a straight and a flush, but flush cards not belonging to that straight
         if (isFlush(hand) && isStraight(hand) || isFlush(hand) && isWheelStraight(hand))
         {
             return true;
@@ -327,6 +330,20 @@ public class Evaluator : MonoBehaviour
         return 0;
     }
 
+    public int CompareKickers(Hand hand1, Hand hand2)
+    {
+        for(int i = hand1.evaluatedHand.Count - 1; i > HAND_SIZE - hand1.evaluatedHand.Count; --i)
+        {
+            int compare = CompareCardValues(hand1.evaluatedHand[i], hand2.evaluatedHand[i]);
+            if(compare == 0)
+            {
+                continue;
+            }
+            return compare;
+        }
+        return 0;
+    }
+
     public int compareTwoHands(Hand hand1, Hand hand2)
     {
        if(isRoyalFlush(hand1) && !isRoyalFlush(hand2))
@@ -348,7 +365,7 @@ public class Evaluator : MonoBehaviour
        if (isStraightFlush(hand2) && isStraightFlush(hand1))
        {
             return CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
-       }
+        }
        if(isFourOfAKind(hand1) && !isFourOfAKind(hand2))
        {
            return 1;
@@ -360,12 +377,34 @@ public class Evaluator : MonoBehaviour
        if(isFourOfAKind(hand1) && isFourOfAKind(hand2))
        {
             int compare = CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
-            if(compare == 0)
+
+            if (compare == 0)
             {
-                return CompareCardValues(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1], hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]);
+                if(getCardVal(hand1.card_to_compare) < getCardVal(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1]))
+                {
+                    if(getCardVal(hand2.card_to_compare) < getCardVal(hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]))
+                    {
+                        compare = CompareCardValues(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1], hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]);
+                    }
+                    else if (getCardVal(hand2.card_to_compare) == getCardVal(hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]))
+                    {
+                        compare = CompareCardValues(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1], hand2.evaluatedHand[2]);
+                    }
+                }
+                else if(getCardVal(hand1.card_to_compare) == getCardVal(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1]))
+                {
+                    if (getCardVal(hand2.card_to_compare) < getCardVal(hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]))
+                    {
+                        compare = CompareCardValues(hand1.evaluatedHand[2], hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]);
+                    }
+                    else if (getCardVal(hand2.card_to_compare) == getCardVal(hand2.evaluatedHand[hand2.evaluatedHand.Count - 1]))
+                    {
+                        compare = CompareCardValues(hand1.evaluatedHand[2], hand2.evaluatedHand[2]);
+                    }
+                }
             }
             return compare;
-       }
+        }
        if(isFullHouse(hand1) && !isFullHouse(hand2))
        {
            return 1;
@@ -393,8 +432,54 @@ public class Evaluator : MonoBehaviour
        }
        if(isThreeOfAKind(hand1) && isThreeOfAKind(hand2))
        {
-            return CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
-       }
+            int compare = CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
+
+            if (compare == 0)
+            {
+                List<Card> cards_to_compare_hand1 = new List<Card>();
+                List<Card> cards_to_compare_hand2 = new List<Card>();
+                int counter = 0;
+
+                for(int i = hand1.evaluatedHand.Count - 1; i > 0; --i)
+                {
+                    if(counter == 2)
+                    {
+                        break;
+                    }
+                    if(getCardVal(hand1.evaluatedHand[i]) == getCardVal(hand1.card_to_compare))
+                    {
+                        continue;
+                    }
+                    cards_to_compare_hand1.Add(hand1.evaluatedHand[i]);
+                    counter++;
+                }
+                counter = 0;
+                for (int i = hand2.evaluatedHand.Count - 1; i > 0; --i)
+                {
+                    if (counter == 2)
+                    {
+                        break;
+                    }
+                    if (getCardVal(hand2.evaluatedHand[i]) == getCardVal(hand2.card_to_compare))
+                    {
+                        continue;
+                    }
+                    cards_to_compare_hand2.Add(hand2.evaluatedHand[i]);
+                    counter++;
+                }
+                cards_to_compare_hand1 = sortHandByValue(cards_to_compare_hand1);
+                cards_to_compare_hand2 = sortHandByValue(cards_to_compare_hand2);
+
+                compare = CompareCardValues(cards_to_compare_hand1[1], cards_to_compare_hand2[1]);
+
+                if(compare == 0)
+                {
+                    compare = CompareCardValues(cards_to_compare_hand1[0], cards_to_compare_hand2[0]);
+                }
+
+            }
+            return compare;
+        }
        if(isTwoPair(hand1) && !isTwoPair(hand2))
        {
            return 1;
@@ -408,10 +493,36 @@ public class Evaluator : MonoBehaviour
            int compare = CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
            if (compare == 0)
            {
-               return CompareCardValues(hand1.card_to_compare_two, hand2.card_to_compare_two);
+               compare = CompareCardValues(hand1.card_to_compare_two, hand2.card_to_compare_two);
+
+                if (compare == 0)
+                {
+                    List<Card> copy_hand_1 = hand1.evaluatedHand.ToList();
+                    List<Card> copy_hand_2 = hand2.evaluatedHand.ToList();
+
+                    for (int i = copy_hand_1.Count - 1; i > 0; --i)
+                    {
+                        if (copy_hand_1.Contains(hand1.card_to_compare) || copy_hand_1.Contains(hand1.card_to_compare_two))
+                        {
+                            copy_hand_1.RemoveAt(i);
+                        }
+                    }
+                    copy_hand_1 = sortHandByValue(copy_hand_1);
+
+                    for (int i = copy_hand_2.Count - 1; i > 0; --i)
+                    {
+                        if (copy_hand_2.Contains(hand2.card_to_compare) || copy_hand_2.Contains(hand2.card_to_compare_two))
+                        {
+                            copy_hand_2.RemoveAt(i);
+                        }
+                    }
+                    copy_hand_2 = sortHandByValue(copy_hand_2);
+
+                    compare = CompareCardValues(copy_hand_1[copy_hand_1.Count - 1], copy_hand_2[copy_hand_2.Count - 1]);
+                }
            }
-           return compare;
-       }
+            return compare;
+        }
        if(isPair(hand1) && !isPair(hand2))
        {
            return 1;
@@ -422,8 +533,42 @@ public class Evaluator : MonoBehaviour
        }
        if(isPair(hand1) && isPair(hand2))
        {
-            return CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
+            int compare = CompareCardValues(hand1.card_to_compare, hand2.card_to_compare);
+
+            if(compare == 0)
+            {
+                List<Card> copy_hand_1 = hand1.evaluatedHand.ToList();
+                List<Card> copy_hand_2 = hand2.evaluatedHand.ToList();
+
+                for (int i = copy_hand_1.Count - 1; i > 0; --i)
+                {
+                    if (copy_hand_1.Contains(hand1.card_to_compare))
+                    {
+                        copy_hand_1.RemoveAt(i);
+                    }
+                }
+                copy_hand_1 = sortHandByValue(copy_hand_1);
+
+                for (int i = copy_hand_2.Count - 1; i > 0; --i)
+                {
+                    if (copy_hand_2.Contains(hand2.card_to_compare))
+                    {
+                        copy_hand_2.RemoveAt(i);
+                    }
+                }
+                copy_hand_2 = sortHandByValue(copy_hand_2);
+
+                for(int i = copy_hand_1.Count - 1; i > 1; --i)
+                {
+                    compare = CompareCardValues(copy_hand_1[i], copy_hand_2[i]);
+                    if(compare != 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return compare;
        }
-       return CompareCardValues(hand1.evaluatedHand[hand1.evaluatedHand.Count - 1], hand2.evaluatedHand[hand1.evaluatedHand.Count - 1]);
+        return CompareKickers(hand1, hand2);
     }
 }

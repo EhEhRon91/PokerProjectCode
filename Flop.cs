@@ -42,6 +42,7 @@ public class Flop : MonoBehaviour
     {
         flop.Add(Deck.deck[Hand.deal_counter]);
         Hand.deal_counter++;
+        TurnManagement.card_counter++;
         PositionCards();
     }
 }
