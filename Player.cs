@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     public bool doneTurn = false;
     public bool isStarting = false;
     public bool hasWon = false;
-    public int min_amount_to_bet = 0;
+    public int min_amount_to_bet;
     public Pot pot;
     // Start is called before the first frame update
     void Start()

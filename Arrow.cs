@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class Arrow : MonoBehaviour
 {
     private const float ROTATION_DEGREES = 90.0f;
-    private Vector3 rotation = new Vector3(0.0f, 0.0f, 270.0f);
+    private const float TIME_TO_DISPLAY_RESULTS = 5.0f;
+    private float timer = 0.0f;
     public Player player;
     public Player enemy1;
     public Player enemy2;
@@ -18,7 +19,6 @@ public class Arrow : MonoBehaviour
     public TurnManagement turnManager;
     public Evaluator evaluator;
     private bool hasRotated = false;
-    private float rotation_value;
     public Pot pot;
     public Flop flop;
     public Text WinningText;
@@ -303,43 +303,51 @@ public class Arrow : MonoBehaviour
                     }
                 }
             }
-
-            if(player.hasWon == true)
+            if (timer == 0.0f)
             {
-                playerHand.hand_evaluated = evaluator.HandType(playerHand);
-                WinningText.text += "Player 1 has Won with " + evaluator.HandString(playerHand);
+                if (player.hasWon == true)
+                {
+                    playerHand.hand_evaluated = evaluator.HandType(playerHand);
+                    WinningText.text += "Player 1 has Won with " + evaluator.HandString(playerHand);
+                }
+                if (enemy1.hasWon == true)
+                {
+                    enemy1Hand.hand_evaluated = evaluator.HandType(enemy1Hand);
+                    WinningText.text += "Player 2 has Won with " + evaluator.HandString(enemy1Hand);
+                }
+                if (enemy2.hasWon == true)
+                {
+                    enemy2Hand.hand_evaluated = evaluator.HandType(enemy2Hand);
+                    WinningText.text += "Player 3 has Won with " + evaluator.HandString(enemy2Hand);
+                }
+                if (enemy3.hasWon == true)
+                {
+                    enemy3Hand.hand_evaluated = evaluator.HandType(enemy3Hand);
+                    WinningText.text += "Player 4 has Won with " + evaluator.HandString(enemy3Hand);
+                }
             }
-            if(enemy1.hasWon == true)
+            if (player.hasWon == true || enemy1.hasWon == true || enemy2.hasWon == true || enemy3.hasWon == true)
             {
-                enemy1Hand.hand_evaluated = evaluator.HandType(enemy1Hand);
-                WinningText.text += "Player 2 has Won with " + evaluator.HandString(enemy1Hand);
+                timer += Time.deltaTime;
+                if (timer >= TIME_TO_DISPLAY_RESULTS)
+                {
+                    turnManager.ResetRound();
+                    timer = 0.0f;
+                    WinningText.text = "";
+                }
             }
-            if(enemy2.hasWon == true)
+            if (flop.flop.Count < 5 && player.doneTurn == true && enemy1.doneTurn == true && enemy2.doneTurn == true && enemy3.doneTurn == true)
             {
-                enemy2Hand.hand_evaluated = evaluator.HandType(enemy2Hand);
-                WinningText.text += "Player 3 has Won with " + evaluator.HandString(enemy2Hand);
+                turnManager.ResetTurn(player);
+                turnManager.ResetTurn(enemy1);
+                turnManager.ResetTurn(enemy2);
+                turnManager.ResetTurn(enemy3);
+                flop.DealAnotherCard();
+                playerHand.AddToHandFromFlop();
+                enemy1Hand.AddToHandFromFlop();
+                enemy2Hand.AddToHandFromFlop();
+                enemy3Hand.AddToHandFromFlop();
             }
-            if(enemy3.hasWon == true)
-            {
-                enemy3Hand.hand_evaluated = evaluator.HandType(enemy3Hand);
-                WinningText.text += "Player 4 has Won with " + evaluator.HandString(enemy3Hand);
-            }
-
-            turnManager.ResetTurn(player);
-            turnManager.ResetTurn(enemy1);
-            turnManager.ResetTurn(enemy2);
-            turnManager.ResetTurn(enemy3);
-            flop.DealAnotherCard();
-            playerHand.AddToHandFromFlop();
-            enemy1Hand.AddToHandFromFlop();
-            enemy2Hand.AddToHandFromFlop();
-            enemy3Hand.AddToHandFromFlop();
-
-            //Testing purposes
-            playerHand.PrintHand();
-            enemy1Hand.PrintHand();
-            enemy2Hand.PrintHand();
-            enemy3Hand.PrintHand();
         }
     }
 }

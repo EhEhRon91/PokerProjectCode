@@ -19,8 +19,8 @@ public class Pot : MonoBehaviour
 
     public void setBlinds(int blind_counter)
     {
-        SMALL_BLIND *= blind_counter;
-        BIG_BLIND *= blind_counter;
+        SMALL_BLIND *= (blind_counter + 1);
+        BIG_BLIND *= (blind_counter + 1);
     }
 
     // Start is called before the first frame update

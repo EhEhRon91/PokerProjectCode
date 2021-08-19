@@ -145,7 +145,7 @@ public class Evaluator : MonoBehaviour
 
         //TODO:
         //Rework checking flush because currently, you can have a straight and a flush, but flush cards not belonging to that straight
-        if (isFlush(hand) && isStraight(hand) || isFlush(hand) && isWheelStraight(hand))
+        if ((isFlush(hand) && isStraight(hand)) || (isFlush(hand) && isWheelStraight(hand)))
         {
             return true;
         }

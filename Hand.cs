@@ -18,7 +18,7 @@ public class Hand : MonoBehaviour
     public static int deal_counter = 0;
     public Flop flop;
     private Evaluator evaluator;
-    private void DealHand()
+    public void DealHand()
     {
         for(int i = 0; i < HAND_SIZE; ++i)
         {
@@ -53,7 +53,7 @@ public class Hand : MonoBehaviour
         Debug.Log("///////////////");
     }
 
-    private void PositionHand()
+    public void PositionHand()
     {
         int counter = 0;
         foreach(Card card in hand)
@@ -63,7 +63,17 @@ public class Hand : MonoBehaviour
         }
     }
 
-    private Vector3 setCardPos(string gameObjectName, int cardNum)
+    public void PositionHand(List<Card> hand, string gameObjectName)
+    {
+        int counter = 0;
+        foreach (Card card in hand)
+        {
+            card.card.transform.localPosition = setCardPos(gameObjectName, counter);
+            counter++;
+        }
+    }
+
+    public Vector3 setCardPos(string gameObjectName, int cardNum)
     {
         if(gameObjectName == "Player")
         {
