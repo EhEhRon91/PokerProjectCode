@@ -189,7 +189,7 @@ public class Evaluator : MonoBehaviour
             && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[3]) - 3 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[4]) - 4)
         {
             isStraight = true;
-            hand.card_to_compare = hand.evaluatedHand[4];
+            hand.card_to_compare = hand.evaluatedHand[hand.evaluatedHand.Count - 1];
         }
         if (hand.evaluatedHand.Count == 6)
         {
@@ -197,7 +197,7 @@ public class Evaluator : MonoBehaviour
                && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[4]) - 3 && getCardVal(hand.evaluatedHand[1]) == getCardVal(hand.evaluatedHand[5]) - 4)
             {
                 isStraight = true;
-                hand.card_to_compare = hand.evaluatedHand[5];
+                hand.card_to_compare = hand.evaluatedHand[hand.evaluatedHand.Count - 1];
             }
         }
         if (hand.evaluatedHand.Count == 7)
@@ -206,7 +206,7 @@ public class Evaluator : MonoBehaviour
                && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[5]) - 3 && getCardVal(hand.evaluatedHand[2]) == getCardVal(hand.evaluatedHand[6]) - 4)
             {
                 isStraight = true;
-                hand.card_to_compare = hand.evaluatedHand[6];
+                hand.card_to_compare = hand.evaluatedHand[hand.evaluatedHand.Count - 1];
             }
         }
         return isStraight;

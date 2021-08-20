@@ -46,7 +46,7 @@ public class Hand : MonoBehaviour
     public void PrintHand()
     {
         Debug.Log("/////" + gameObject.name + "///////");
-        foreach(Card card in evaluatedHand)
+        foreach(Card card in hand)
         {
             Debug.Log(card.card_name);
         }

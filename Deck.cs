@@ -19,7 +19,6 @@ public class Deck : MonoBehaviour
 
     public static List<Card> ShuffleDeck(int shuffleLoopLength)
     {
-        GenerateDeck(deck);
         for (int i = 0; i < shuffleLoopLength; ++i)
         {
             int rand1 = UnityEngine.Random.Range(0, deck.Count - 1);
@@ -37,6 +36,7 @@ public class Deck : MonoBehaviour
 
     private void Awake()
     {
+        GenerateDeck(deck);
         Deck.ShuffleDeck(10000);
     }
 }

@@ -86,14 +86,14 @@ public class TurnManagement : MonoBehaviour
         card_counter = 0;
 
         playerHand.DealHand();
-        playerHand.PositionHand(playerHand.hand, "Player");
         enemy1Hand.DealHand();
-        enemy1Hand.PositionHand(enemy1Hand.hand, "Enemy1");
         enemy2Hand.DealHand();
-        enemy2Hand.PositionHand(enemy2Hand.hand, "Enemy2");
         enemy3Hand.DealHand();
-        enemy3Hand.PositionHand(enemy3Hand.hand, "Enemy3");
         flop.DealInitial();
+        playerHand.PositionHand();
+        enemy1Hand.PositionHand();
+        enemy2Hand.PositionHand();
+        enemy3Hand.PositionHand();
         flop.PositionCards();
         player.isMyTurn = true;
         doneChecking = true;
