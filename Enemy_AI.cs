@@ -53,7 +53,7 @@ public class Enemy_AI : MonoBehaviour
         return true;
     }
 
-    public int WhatToBet(Player player, Hand hand)
+    public int WhatToBet(Player player, Hand hand, int flopCount)
     {
         if(hand.hand_evaluated >= Hand.HAND_EVALUATED.FULL_HOUSE)
         {

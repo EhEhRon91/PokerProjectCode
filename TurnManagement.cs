@@ -95,17 +95,43 @@ public class TurnManagement : MonoBehaviour
         enemy2Hand.PositionHand();
         enemy3Hand.PositionHand();
         flop.PositionCards();
-        player.isMyTurn = true;
         doneChecking = true;
         pot.setBlinds(round_counter);
 
         pot.amount = 0;
+        turn_counter = 0;
         player_won_count = 1;
         player.min_amount_to_bet = Pot.SMALL_BLIND;
         enemy1.min_amount_to_bet = Pot.SMALL_BLIND;
         enemy2.min_amount_to_bet = Pot.SMALL_BLIND;
         enemy3.min_amount_to_bet = Pot.SMALL_BLIND;
         pot.min_amount_to_bet = Pot.SMALL_BLIND;
+
+        if(player.isStarting)
+        {
+            player.isStarting = false;
+            enemy1.isStarting = true;
+            enemy1.isMyTurn = true;
+            player.isMyTurn = false;
+        }
+        else if(enemy1.isStarting)
+        {
+            enemy1.isStarting = false;
+            enemy2.isStarting = true;
+            enemy2.isMyTurn = true;
+        }
+        else if(enemy2.isStarting)
+        {
+            enemy2.isStarting = false;
+            enemy3.isStarting = true;
+            enemy3.isMyTurn = true;
+        }
+        else if(enemy3.isStarting)
+        {
+            enemy3.isStarting = false;
+            player.isStarting = true;
+            player.isMyTurn = true;
+        }
     }
 
     public bool DoneTurn()
