@@ -59,6 +59,5 @@ public class Flop : MonoBehaviour
         Hand.deal_counter++;
         TurnManagement.card_counter++;
         PositionCards();
-        Debug.Log(Hand.deal_counter);
     }
 }

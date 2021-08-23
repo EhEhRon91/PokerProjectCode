@@ -59,15 +59,19 @@ public class TurnManagement : MonoBehaviour
         player.hasWon = false;
         player.doneTurn = false;
         player.hasFolded = false;
+        player.isMyTurn = false;
         enemy1.hasWon = false;
         enemy1.hasFolded = false;
         enemy1.doneTurn = false;
+        enemy1.isMyTurn = false;
         enemy2.hasWon = false;
         enemy2.hasFolded = false;
         enemy2.doneTurn = false;
+        enemy2.isMyTurn = false;
         enemy3.hasWon = false;
         enemy3.hasFolded = false;
         enemy3.doneTurn = false;
+        enemy3.isMyTurn = false;
 
         playerHand.hand.Clear();
         playerHand.evaluatedHand.Clear();
@@ -112,7 +116,6 @@ public class TurnManagement : MonoBehaviour
             player.isStarting = false;
             enemy1.isStarting = true;
             enemy1.isMyTurn = true;
-            player.isMyTurn = false;
         }
         else if(enemy1.isStarting)
         {
@@ -157,7 +160,6 @@ public class TurnManagement : MonoBehaviour
 
     public void EnemyBet(Player player, int amount)
     {
-        player.isMyTurn = false;
         player.doneTurn = true;
         pot.amount += amount;
         pot.min_amount_to_bet = amount;
