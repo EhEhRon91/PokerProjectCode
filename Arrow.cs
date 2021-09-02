@@ -24,8 +24,31 @@ public class Arrow : MonoBehaviour
     private int turn;
     public Enemy_AI AI;
 
-    public void RotateArrow(int turn_counter, int turn)
+    public void RotateArrow(int turn_counter)
     {
+        if (turn_counter == 0)
+        {
+            if (player.isStarting)
+            {
+                turn = 1;
+                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 1), Vector3.forward);
+            }
+            else if (enemy1.isStarting)
+            {
+                turn = 2;
+                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 2), Vector3.forward);
+            }
+            else if (enemy2.isStarting)
+            {
+                turn = 3;
+                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 3), Vector3.forward);
+            }
+            else if (enemy3.isStarting)
+            {
+                turn = 4;
+                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 4), Vector3.forward);
+            }
+        }
         turnManager.turn_timer += Time.deltaTime;
 
         if (turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
@@ -153,263 +176,243 @@ public class Arrow : MonoBehaviour
         }
     }
 
+    public void FinishRound()
+    {
+        int compare = evaluator.compareTwoHands(playerHand, enemy1Hand);
+        int compare2 = evaluator.compareTwoHands(enemy2Hand, enemy3Hand);
+        int compare3 = 0;
+
+        if (compare == 1 && compare2 == 1)
+        {
+            compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
+
+            if (compare3 == 1)
+            {
+                player.hasWon = true;
+            }
+            else if (compare3 == -1)
+            {
+                enemy2.hasWon = true;
+            }
+            else if (compare3 == 0)
+            {
+                player.hasWon = true;
+                enemy2.hasWon = true;
+                TurnManagement.player_won_count = 2;
+            }
+        }
+        else if (compare == 1 && compare2 == -1)
+        {
+            compare3 = evaluator.compareTwoHands(playerHand, enemy3Hand);
+
+            if (compare3 == 1)
+            {
+                player.hasWon = true;
+            }
+            else if (compare3 == -1)
+            {
+                enemy3.hasWon = true;
+            }
+            else if (compare3 == 0)
+            {
+                player.hasWon = true;
+                enemy3.hasWon = true;
+                TurnManagement.player_won_count = 2;
+            }
+        }
+        else if (compare == -1 && compare2 == 1)
+        {
+            compare3 = evaluator.compareTwoHands(enemy1Hand, enemy2Hand);
+
+            if (compare3 == 1)
+            {
+                enemy1.hasWon = true;
+            }
+            else if (compare3 == -1)
+            {
+                enemy2.hasWon = true;
+            }
+            else if (compare3 == 0)
+            {
+                enemy1.hasWon = true;
+                enemy2.hasWon = true;
+                TurnManagement.player_won_count = 2;
+            }
+        }
+        else if (compare == -1 && compare2 == -1)
+        {
+            compare3 = evaluator.compareTwoHands(enemy1Hand, enemy3Hand);
+
+            if (compare3 == 1)
+            {
+                enemy1.hasWon = true;
+            }
+            else if (compare3 == -1)
+            {
+                enemy3.hasWon = true;
+            }
+            else if (compare3 == 0)
+            {
+                enemy1.hasWon = true;
+                enemy3.hasWon = true;
+                TurnManagement.player_won_count = 2;
+            }
+        }
+        else if (compare == 0)
+        {
+            if (compare2 == 1)
+            {
+                compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
+
+                if (compare3 == 1)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy2.hasWon = true;
+                }
+                else if (compare3 == 0)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    enemy2.hasWon = true;
+                    TurnManagement.player_won_count = 3;
+                }
+            }
+            else if (compare2 == -1)
+            {
+                compare3 = evaluator.compareTwoHands(playerHand, enemy3Hand);
+
+                if (compare3 == 1)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy3.hasWon = true;
+                }
+                else if (compare3 == 0)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 3;
+                }
+            }
+            else if (compare2 == 0)
+            {
+                compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
+
+                if (compare3 == 1)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == 0)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 4;
+                }
+            }
+        }
+        else if (compare2 == 0)
+        {
+            if (compare == 1)
+            {
+                compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
+
+                if (compare3 == 1)
+                {
+                    player.hasWon = true;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == 0)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    enemy2.hasWon = true;
+                    TurnManagement.player_won_count = 3;
+                }
+            }
+            else if (compare == -1)
+            {
+                compare3 = evaluator.compareTwoHands(enemy1Hand, enemy2Hand);
+
+                if (compare3 == 1)
+                {
+                    enemy1.hasWon = true;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == 0)
+                {
+                    enemy1.hasWon = true;
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 3;
+                }
+            }
+            else if (compare == 0)
+            {
+                compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
+
+                if (compare3 == 1)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == -1)
+                {
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 2;
+                }
+                else if (compare3 == 0)
+                {
+                    player.hasWon = true;
+                    enemy1.hasWon = true;
+                    enemy2.hasWon = true;
+                    enemy3.hasWon = true;
+                    TurnManagement.player_won_count = 4;
+                }
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        if(TurnManagement.turn_counter == 0)
-        {
-            if (player.isStarting)
-            {
-                turn = 1;
-                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 1), Vector3.forward);
-            }
-            else if(enemy1.isStarting)
-            {
-                turn = 2;
-                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 2), Vector3.forward);
-            }
-            else if(enemy2.isStarting)
-            {
-                turn = 3;
-                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 3), Vector3.forward);
-            }
-            else if(enemy3.isStarting)
-            {
-                turn = 4;
-                gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 4), Vector3.forward);
-            }
-        }
-
-        RotateArrow(TurnManagement.turn_counter, turn);
+        RotateArrow(TurnManagement.turn_counter);
 
         if (turnManager.DoneTurn() && ((player.isMyTurn && player.isStarting) || (enemy1.isStarting) || (enemy2.isStarting) || (enemy3.isStarting)))
         {
             if (TurnManagement.card_counter == 2)
             {
-                int compare = evaluator.compareTwoHands(playerHand, enemy1Hand);
-                int compare2 = evaluator.compareTwoHands(enemy2Hand, enemy3Hand);
-                int compare3 = 0;
-
-                if(compare == 1 && compare2 == 1)
-                {
-                    compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
-
-                    if(compare3 == 1)
-                    {
-                        player.hasWon = true;
-                    }
-                    else if(compare3 == -1)
-                    {
-                        enemy2.hasWon = true;
-                    }
-                    else if(compare3 == 0)
-                    {
-                        player.hasWon = true;
-                        enemy2.hasWon = true;
-                        TurnManagement.player_won_count = 2;
-                    }
-                }
-                else if(compare == 1 && compare2 == -1)
-                {
-                    compare3 = evaluator.compareTwoHands(playerHand, enemy3Hand);
-
-                    if (compare3 == 1)
-                    {
-                        player.hasWon = true;
-                    }
-                    else if (compare3 == -1)
-                    {
-                        enemy3.hasWon = true;
-                    }
-                    else if (compare3 == 0)
-                    {
-                        player.hasWon = true;
-                        enemy3.hasWon = true;
-                        TurnManagement.player_won_count = 2;
-                    }
-                }
-                else if(compare == -1 && compare2 == 1)
-                {
-                    compare3 = evaluator.compareTwoHands(enemy1Hand, enemy2Hand);
-
-                    if (compare3 == 1)
-                    {
-                        enemy1.hasWon = true;
-                    }
-                    else if (compare3 == -1)
-                    {
-                        enemy2.hasWon = true;
-                    }
-                    else if (compare3 == 0)
-                    {
-                        enemy1.hasWon = true;
-                        enemy2.hasWon = true;
-                        TurnManagement.player_won_count = 2;
-                    }
-                }
-                else if(compare == -1 && compare2 == -1)
-                {
-                    compare3 = evaluator.compareTwoHands(enemy1Hand, enemy3Hand);
-
-                    if (compare3 == 1)
-                    {
-                        enemy1.hasWon = true;
-                    }
-                    else if (compare3 == -1)
-                    {
-                        enemy3.hasWon = true;
-                    }
-                    else if (compare3 == 0)
-                    {
-                        enemy1.hasWon = true;
-                        enemy3.hasWon = true;
-                        TurnManagement.player_won_count = 2;
-                    }
-                }
-                else if(compare == 0)
-                {
-                    if(compare2 == 1)
-                    {
-                        compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
-
-                        if (compare3 == 1)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy2.hasWon = true;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            enemy2.hasWon = true;
-                            TurnManagement.player_won_count = 3;
-                        }
-                    }
-                    else if(compare2 == -1)
-                    {
-                        compare3 = evaluator.compareTwoHands(playerHand, enemy3Hand);
-
-                        if (compare3 == 1)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy3.hasWon = true;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 3;
-                        }
-                    }
-                    else if(compare2 == 0)
-                    {
-                        compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
-
-                        if (compare3 == 1)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 4;
-                        }
-                    }
-                }
-                else if(compare2 == 0)
-                {
-                    if (compare == 1)
-                    {
-                        compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
-
-                        if (compare3 == 1)
-                        {
-                            player.hasWon = true;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            enemy2.hasWon = true;
-                            TurnManagement.player_won_count = 3;
-                        }
-                    }
-                    else if (compare == -1)
-                    {
-                        compare3 = evaluator.compareTwoHands(enemy1Hand, enemy2Hand);
-
-                        if (compare3 == 1)
-                        {
-                            enemy1.hasWon = true;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            enemy1.hasWon = true;
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 3;
-                        }
-                    }
-                    else if (compare == 0)
-                    {
-                        compare3 = evaluator.compareTwoHands(playerHand, enemy2Hand);
-
-                        if (compare3 == 1)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == -1)
-                        {
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 2;
-                        }
-                        else if (compare3 == 0)
-                        {
-                            player.hasWon = true;
-                            enemy1.hasWon = true;
-                            enemy2.hasWon = true;
-                            enemy3.hasWon = true;
-                            TurnManagement.player_won_count = 4;
-                        }
-                    }
-                }
+                FinishRound();
             }
             if (timer == 0.0f)
             {
