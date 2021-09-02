@@ -185,11 +185,14 @@ public class Evaluator : MonoBehaviour
     {
         hand.evaluatedHand = sortHandByValue(hand.evaluatedHand);
         bool isStraight = false;
-        if(getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[1]) - 1 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[2]) - 2
-            && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[3]) - 3 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[4]) - 4)
+        if (hand.evaluatedHand.Count == 5)
         {
-            isStraight = true;
-            hand.card_to_compare = hand.evaluatedHand[hand.evaluatedHand.Count - 1];
+            if (getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[1]) - 1 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[2]) - 2
+                && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[3]) - 3 && getCardVal(hand.evaluatedHand[0]) == getCardVal(hand.evaluatedHand[4]) - 4)
+            {
+                isStraight = true;
+                hand.card_to_compare = hand.evaluatedHand[hand.evaluatedHand.Count - 1];
+            }
         }
         if (hand.evaluatedHand.Count == 6)
         {

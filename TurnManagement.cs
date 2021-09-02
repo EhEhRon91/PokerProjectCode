@@ -100,7 +100,7 @@ public class TurnManagement : MonoBehaviour
         enemy3Hand.PositionHand();
         flop.PositionCards();
         doneChecking = true;
-        pot.setBlinds(round_counter);
+        pot.setBlinds();
 
         pot.amount = 0;
         turn_counter = 0;

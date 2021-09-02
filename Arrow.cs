@@ -18,219 +18,170 @@ public class Arrow : MonoBehaviour
     public Hand enemy3Hand;
     public TurnManagement turnManager;
     public Evaluator evaluator;
-    private bool hasRotated = false;
     public Pot pot;
     public Flop flop;
     public Text WinningText;
+    private int turn;
+    public Enemy_AI AI;
+
+    public void RotateArrow(int turn_counter, int turn)
+    {
+        turnManager.turn_timer += Time.deltaTime;
+
+        if (turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
+        {
+            if (playerHand.evaluatedHand.Count != 0)
+            {
+                int compare = evaluator.compareTwoHands(playerHand, enemy1Hand);
+                int compare2 = evaluator.compareTwoHands(enemy2Hand, enemy3Hand);
+            }
+            gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (turn_counter + turn), Vector3.forward);
+            turnManager.turn_timer = 0.0f;
+
+            if (turn_counter % 4 == 0 || turn_counter == 0)
+            {
+                if (turn == 1)
+                {
+                    player.isMyTurn = true;
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = false;
+                }
+                else if(turn == 2)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = true;
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = false;
+                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                }
+                else if(turn == 3)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = true;
+                    enemy3.isMyTurn = false;
+                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                }
+                else if(turn == 4)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = true;
+                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                }
+            }
+            else if (turn_counter % 4 == 1)
+            {
+                if (turn == 1)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = true;
+                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                }
+                else if (turn == 2)
+                {
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = true;
+                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                }
+                else if (turn == 3)
+                {
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = true;
+                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                }
+                else if (turn == 4)
+                {
+                    player.isMyTurn = true;
+                    enemy3.isMyTurn = false;
+                }
+            }
+            else if (turn_counter % 4 == 2)
+            {
+                if (turn == 1)
+                {
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = true;
+                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                }
+                else if (turn == 2)
+                {
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = true;
+                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                }
+                else if (turn == 3)
+                {
+                    player.isMyTurn = true;
+                    enemy3.isMyTurn = false;
+                }
+                else if (turn == 4)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = true;
+                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                }
+            }
+            else if (turn_counter % 4 == 3)
+            {
+                if (turn == 1)
+                {
+                    enemy2.isMyTurn = false;
+                    enemy3.isMyTurn = true;
+                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                }
+                else if (turn == 2)
+                {
+                    player.isMyTurn = true;
+                    enemy3.isMyTurn = false;
+                }
+                else if (turn == 3)
+                {
+                    player.isMyTurn = false;
+                    enemy1.isMyTurn = true;
+                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                }
+                else if (turn == 4)
+                {
+                    enemy1.isMyTurn = false;
+                    enemy2.isMyTurn = true;
+                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                }
+            }
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if(TurnManagement.turn_counter == 0 && player.isStarting)
+        if(TurnManagement.turn_counter == 0)
         {
-            gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 1), Vector3.forward);
-        }
-        if (TurnManagement.turn_counter == 0 && enemy1.isStarting)
-        {
-            gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 2), Vector3.forward);
-        }
-        if (TurnManagement.turn_counter == 0 && enemy2.isStarting)
-        {
-            gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 3), Vector3.forward);
-        }
-        if (TurnManagement.turn_counter == 0 && enemy3.isStarting)
-        {
-            gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 4), Vector3.forward);
-        }
-        if (player.isStarting)
-        {
-            if (hasRotated == false)
+            if (player.isStarting)
             {
-                hasRotated = true;
-            }
-
-            turnManager.turn_timer += Time.deltaTime;
-
-            if(turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
-            {
+                turn = 1;
                 gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 1), Vector3.forward);
-                turnManager.turn_timer = 0.0f;
-                hasRotated = false;
-
-                if (TurnManagement.turn_counter % 4 == 0 || TurnManagement.turn_counter == 0)
-                {
-                    player.isMyTurn = true;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                }
-                else if(TurnManagement.turn_counter % 4 == 1)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = true;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy1, pot.min_amount_to_bet);
-                }
-                else if(TurnManagement.turn_counter % 4 == 2)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = true;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy2, pot.min_amount_to_bet);
-                }
-                else if(TurnManagement.turn_counter % 4 == 3)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, pot.min_amount_to_bet);
-                }
             }
-        }
-        else if(enemy1.isStarting)
-        {
-            if (hasRotated == false)
+            else if(enemy1.isStarting)
             {
-                hasRotated = true;
-            }
-            turnManager.turn_timer += Time.deltaTime;
-
-            if (turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
-            {
+                turn = 2;
                 gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 2), Vector3.forward);
-                turnManager.turn_timer = 0.0f;
-                hasRotated = false;
-
-                if (TurnManagement.turn_counter % 4 == 0 || TurnManagement.turn_counter == 0)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = true;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy1, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 1)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = true;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy2, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 2)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 3)
-                {
-                    player.isMyTurn = true;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                }
             }
-        }
-        else if (enemy2.isStarting)
-        {
-            if (hasRotated == false)
+            else if(enemy2.isStarting)
             {
-                hasRotated = true;
-            }
-            turnManager.turn_timer += Time.deltaTime;
-
-            if (turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
-            {
+                turn = 3;
                 gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 3), Vector3.forward);
-                turnManager.turn_timer = 0.0f;
-                hasRotated = false;
-
-                if (TurnManagement.turn_counter % 4 == 0 || TurnManagement.turn_counter == 0)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = true;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy2, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 1)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 2)
-                {
-                    player.isMyTurn = true;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                }
-                else if (TurnManagement.turn_counter % 4 == 3)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = true;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy1, pot.min_amount_to_bet);
-                }
             }
-        }
-        else if(enemy3.isStarting)
-        {
-            if (hasRotated == false)
+            else if(enemy3.isStarting)
             {
-                hasRotated = true;
-            }
-            turnManager.turn_timer += Time.deltaTime;
-
-            if (turnManager.turn_timer >= TurnManagement.TURN_LENGTH)
-            {
+                turn = 4;
                 gameObject.transform.rotation = Quaternion.AngleAxis(-ROTATION_DEGREES * (TurnManagement.turn_counter + 4), Vector3.forward);
-                turnManager.turn_timer = 0.0f;
-                hasRotated = false;
-
-                if (TurnManagement.turn_counter % 4 == 0 || TurnManagement.turn_counter == 0)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 1)
-                {
-                    player.isMyTurn = true;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                }
-                else if (TurnManagement.turn_counter % 4 == 2)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = true;
-                    enemy2.isMyTurn = false;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy1, pot.min_amount_to_bet);
-                }
-                else if (TurnManagement.turn_counter % 4 == 3)
-                {
-                    player.isMyTurn = false;
-                    enemy1.isMyTurn = false;
-                    enemy2.isMyTurn = true;
-                    enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy2, pot.min_amount_to_bet);
-                }
             }
         }
+
+        RotateArrow(TurnManagement.turn_counter, turn);
+
         if (turnManager.DoneTurn() && ((player.isMyTurn && player.isStarting) || (enemy1.isStarting) || (enemy2.isStarting) || (enemy3.isStarting)))
         {
             if (TurnManagement.card_counter == 2)

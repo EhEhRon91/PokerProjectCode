@@ -17,7 +17,7 @@ public class Pot : MonoBehaviour
     public static int SMALL_BLIND = 100;
     public static int BIG_BLIND = 200;
 
-    public void setBlinds(int blind_counter)
+    public void setBlinds()
     {
         SMALL_BLIND += 200;
         BIG_BLIND += 200;
