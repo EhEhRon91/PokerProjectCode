@@ -406,9 +406,10 @@ public class Arrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RotateArrow(TurnManagement.turn_counter);
+        if (player.hasWon == false && enemy1.hasWon == false && enemy2.hasWon == false && enemy3.hasWon == false)
+            RotateArrow(TurnManagement.turn_counter);
 
-        if (turnManager.DoneTurn() && ((player.isMyTurn && player.isStarting) || (enemy1.isStarting) || (enemy2.isStarting) || (enemy3.isStarting)))
+        if (turnManager.DoneTurn())
         {
             if (TurnManagement.card_counter == 2)
             {

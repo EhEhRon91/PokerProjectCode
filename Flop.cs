@@ -35,11 +35,9 @@ public class Flop : MonoBehaviour
 
     public void PositionCardsReset()
     {
-        int counter = 0;
         foreach (Card card in flop)
         {
             card.card.transform.localPosition = setCardPos();
-            counter++;
         }
     }
 

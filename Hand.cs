@@ -114,13 +114,6 @@ public class Hand : MonoBehaviour
 
     public void AddToHandFromFlop()
     {
-        if(TurnManagement.card_counter == 1)
-        {
-            evaluatedHand.Add(flop.flop[3]);
-        }
-        else if(TurnManagement.card_counter == 2)
-        {
-            evaluatedHand.Add(flop.flop[4]);
-        }
+        evaluatedHand.Add(flop.flop[2 + TurnManagement.card_counter]);
     }
 }
