@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurnManagement : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class TurnManagement : MonoBehaviour
     public Player enemy1;
     public Player enemy2;
     public Player enemy3;
+
+    public Enemy_AI AI;
 
     public Hand playerHand;
     public Hand enemy1Hand;

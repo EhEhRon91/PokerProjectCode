@@ -406,8 +406,18 @@ public class Arrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (player.hasWon == false && enemy1.hasWon == false && enemy2.hasWon == false && enemy3.hasWon == false)
             RotateArrow(TurnManagement.turn_counter);
+
+        if (enemy1.hasFolded == false && enemy1.isMyTurn)
+            enemy1.hasFolded = AI.Fold(enemy1Hand, 0);
+
+        if (enemy2.hasFolded == false && enemy2.isMyTurn)
+            enemy2.hasFolded = AI.Fold(enemy2Hand, 0);
+
+        if (enemy3.hasFolded == false && enemy3.isMyTurn)
+            enemy3.hasFolded = AI.Fold(enemy3Hand, 0);
 
         if (turnManager.DoneTurn())
         {
