@@ -76,7 +76,7 @@ public class Arrow : MonoBehaviour
                     enemy1.isMyTurn = true;
                     enemy2.isMyTurn = false;
                     enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                    turnManager.EnemyBet(enemy1, enemy1Hand, AI.WhatToBet(enemy1, enemy1Hand, 0));
                 }
                 else if(turn == 3)
                 {
@@ -84,7 +84,7 @@ public class Arrow : MonoBehaviour
                     enemy1.isMyTurn = false;
                     enemy2.isMyTurn = true;
                     enemy3.isMyTurn = false;
-                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                    turnManager.EnemyBet(enemy2, enemy2Hand, AI.WhatToBet(enemy2, enemy2Hand, 0));
                 }
                 else if(turn == 4)
                 {
@@ -92,7 +92,7 @@ public class Arrow : MonoBehaviour
                     enemy1.isMyTurn = false;
                     enemy2.isMyTurn = false;
                     enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                    turnManager.EnemyBet(enemy3, enemy3Hand, AI.WhatToBet(enemy3, enemy3Hand, 0));
                 }
             }
             else if (turn_counter % 4 == 1)
@@ -101,19 +101,19 @@ public class Arrow : MonoBehaviour
                 {
                     player.isMyTurn = false;
                     enemy1.isMyTurn = true;
-                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                    turnManager.EnemyBet(enemy1, enemy1Hand, AI.WhatToBet(enemy1, enemy1Hand, 0));
                 }
                 else if (turn == 2)
                 {
                     enemy1.isMyTurn = false;
                     enemy2.isMyTurn = true;
-                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                    turnManager.EnemyBet(enemy2, enemy2Hand, AI.WhatToBet(enemy2, enemy2Hand, 0));
                 }
                 else if (turn == 3)
                 {
                     enemy2.isMyTurn = false;
                     enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                    turnManager.EnemyBet(enemy3, enemy3Hand, AI.WhatToBet(enemy3, enemy3Hand, 0));
                 }
                 else if (turn == 4)
                 {
@@ -127,13 +127,13 @@ public class Arrow : MonoBehaviour
                 {
                     enemy1.isMyTurn = false;
                     enemy2.isMyTurn = true;
-                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                    turnManager.EnemyBet(enemy2, enemy2Hand, AI.WhatToBet(enemy2, enemy2Hand, 0));
                 }
                 else if (turn == 2)
                 {
                     enemy2.isMyTurn = false;
                     enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                    turnManager.EnemyBet(enemy3, enemy3Hand, AI.WhatToBet(enemy3, enemy3Hand, 0));
                 }
                 else if (turn == 3)
                 {
@@ -144,7 +144,7 @@ public class Arrow : MonoBehaviour
                 {
                     player.isMyTurn = false;
                     enemy1.isMyTurn = true;
-                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                    turnManager.EnemyBet(enemy1, enemy1Hand, AI.WhatToBet(enemy1, enemy1Hand, 0));
                 }
             }
             else if (turn_counter % 4 == 3)
@@ -153,7 +153,7 @@ public class Arrow : MonoBehaviour
                 {
                     enemy2.isMyTurn = false;
                     enemy3.isMyTurn = true;
-                    turnManager.EnemyBet(enemy3, AI.WhatToBet(enemy3, enemy3Hand, 0));
+                    turnManager.EnemyBet(enemy3, enemy3Hand, AI.WhatToBet(enemy3, enemy3Hand, 0));
                 }
                 else if (turn == 2)
                 {
@@ -164,13 +164,13 @@ public class Arrow : MonoBehaviour
                 {
                     player.isMyTurn = false;
                     enemy1.isMyTurn = true;
-                    turnManager.EnemyBet(enemy1, AI.WhatToBet(enemy1, enemy1Hand, 0));
+                    turnManager.EnemyBet(enemy1, enemy1Hand, AI.WhatToBet(enemy1, enemy1Hand, 0));
                 }
                 else if (turn == 4)
                 {
                     enemy1.isMyTurn = false;
                     enemy2.isMyTurn = true;
-                    turnManager.EnemyBet(enemy2, AI.WhatToBet(enemy2, enemy2Hand, 0));
+                    turnManager.EnemyBet(enemy2, enemy2Hand, AI.WhatToBet(enemy2, enemy2Hand, 0));
                 }
             }
         }

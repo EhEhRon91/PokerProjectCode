@@ -16,11 +16,6 @@ public class Enemy_AI : MonoBehaviour
     public Pot pot;
     public int amount_to_bet;
 
-    public Hand.HAND_EVALUATED getHandValue(Hand hand)
-    {
-        return hand.hand_evaluated;
-    }
-
     public bool Fold(Hand hand, int flopCount)
     {
         if (hand.hand_evaluated >= Hand.HAND_EVALUATED.PAIR)

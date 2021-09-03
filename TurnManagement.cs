@@ -161,15 +161,23 @@ public class TurnManagement : MonoBehaviour
         player.doneTurn = true;
     }
 
-    public void EnemyBet(Player player, int amount)
+    public void EnemyBet(Player player, Hand hand, int amount)
     {
         player.doneTurn = true;
+        turn_counter++;
+        if (amount < pot.min_amount_to_bet)
+        {
+            player.hasFolded = true;
+            return;
+        }
+        if (AI.Stay(hand, 0) || player.hasFolded)
+            return;
+
         pot.amount += amount;
         pot.min_amount_to_bet = amount;
         pot.turn_amount = 0;
         player.min_amount_to_bet = amount;
         player.chips -= amount;
-        turn_counter++;
     }
 
     public void PlayerStay()
