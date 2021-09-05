@@ -27,7 +27,7 @@ public class Pot : MonoBehaviour
     void Start()
     {
         amount = 0;
-        turn_amount = SMALL_BLIND;
+        turn_amount = 0;
     }
 
     public void SetBaseAmount()

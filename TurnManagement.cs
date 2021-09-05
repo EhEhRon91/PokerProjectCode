@@ -165,6 +165,11 @@ public class TurnManagement : MonoBehaviour
     {
         player.doneTurn = true;
         turn_counter++;
+        if(amount < pot.turn_amount)
+        {
+            player.hasFolded = AI.Fold(hand, 0);
+            return;
+        }
         if (amount < pot.min_amount_to_bet)
         {
             player.hasFolded = true;
@@ -192,7 +197,6 @@ public class TurnManagement : MonoBehaviour
         player.doneTurn = true;
         pot.amount += pot.turn_amount;
         pot.min_amount_to_bet = pot.turn_amount;
-        pot.turn_amount = 0;
         player.min_amount_to_bet = pot.min_amount_to_bet;
         turn_counter++;
     }

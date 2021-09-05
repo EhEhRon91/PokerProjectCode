@@ -410,20 +410,38 @@ public class Arrow : MonoBehaviour
         if (player.hasWon == false && enemy1.hasWon == false && enemy2.hasWon == false && enemy3.hasWon == false)
             RotateArrow(TurnManagement.turn_counter);
 
-        if (enemy1.hasFolded == false && enemy1.isMyTurn)
+        if (enemy1.hasFolded == false && enemy1.isMyTurn && pot.turn_amount > 0)
             enemy1.hasFolded = AI.Fold(enemy1Hand, 0);
 
-        if (enemy2.hasFolded == false && enemy2.isMyTurn)
+        if (enemy2.hasFolded == false && enemy2.isMyTurn && pot.turn_amount > 0)
             enemy2.hasFolded = AI.Fold(enemy2Hand, 0);
 
-        if (enemy3.hasFolded == false && enemy3.isMyTurn)
+        if (enemy3.hasFolded == false && enemy3.isMyTurn && pot.turn_amount > 0)
             enemy3.hasFolded = AI.Fold(enemy3Hand, 0);
 
         if (turnManager.DoneTurn())
         {
+            pot.turn_amount = 0;
+            if (player.hasFolded && enemy1.hasFolded && enemy2.hasFolded)
+                enemy3.hasWon = true;
+            if (enemy1.hasFolded && enemy2.hasFolded && enemy3.hasFolded)
+                player.hasWon = true;
+            if (enemy2.hasFolded && enemy3.hasFolded && player.hasFolded)
+                enemy1.hasWon = true;
+            if (enemy3.hasFolded && player.hasFolded && enemy1.hasFolded)
+                enemy2.hasWon = true;
+
             if (TurnManagement.card_counter == 2)
             {
                 FinishRound();
+                if (player.hasFolded && player.hasWon)
+                    player.hasWon = false;
+                if (enemy1.hasFolded && enemy1.hasWon)
+                    enemy1.hasWon = false;
+                if (enemy2.hasFolded && enemy2.hasWon)
+                    enemy2.hasWon = false;
+                if (enemy3.hasFolded && enemy3.hasWon)
+                    enemy3.hasWon = false;
             }
             if (timer == 0.0f)
             {
@@ -458,7 +476,7 @@ public class Arrow : MonoBehaviour
                     WinningText.text = "";
                 }
             }
-            if (flop.flop.Count < 5 && player.doneTurn == true && enemy1.doneTurn == true && enemy2.doneTurn == true && enemy3.doneTurn == true)
+            if (flop.flop.Count < 5 && player.doneTurn == true && enemy1.doneTurn == true && enemy2.doneTurn == true && enemy3.doneTurn == true && player.hasWon == false && enemy1.hasWon == false && enemy2.hasWon == false && enemy3.hasWon == false)
             {
                 turnManager.ResetTurn(player);
                 turnManager.ResetTurn(enemy1);
