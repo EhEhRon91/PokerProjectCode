@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy_AI : MonoBehaviour
 {
+    //Add a comment
     public Player player;
     public Player enemy1;
     public Player enemy2;
