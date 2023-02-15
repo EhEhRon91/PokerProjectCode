@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Evaluator : MonoBehaviour
 {
+    // Add a comment here
     private const int HAND_LIMIT = 5;
     private const int HAND_SIZE = 7;
 
