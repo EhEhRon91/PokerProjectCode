@@ -6,6 +6,8 @@ using UnityEngine;
 public class Deck : MonoBehaviour
 {
     public static List<Card> deck = new List<Card>();
+
+    // Generates a Deck
     public static void GenerateDeck(List<Card> deck)
     {
         foreach(Card.SUIT suit in Enum.GetValues(typeof(Card.SUIT)))
